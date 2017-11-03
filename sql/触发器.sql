@@ -9,6 +9,9 @@ $example_table$ LANGUAGE plpgsql;
 CREATE TRIGGER BeforeInsertInsertGaodePOI_trigger Before INSERT  ON gaode_poi FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodePOI ();
 
 
+UPDATE baidu_station t set geom=st_transform(ST_PointFromText('POINT('||replace((string_to_array(substring(t.geo,3,1000),';'))[1],',',' ')||')',3857),4326);
+
+
 
 
 --高德数据插入触发器  生成线路
