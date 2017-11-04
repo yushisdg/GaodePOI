@@ -9,11 +9,6 @@ $example_table$ LANGUAGE plpgsql;
 CREATE TRIGGER BeforeInsertInsertGaodePOI_trigger Before INSERT  ON gaode_poi FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodePOI ();
 
 
-UPDATE baidu_station t set geom=st_transform(ST_PointFromText('POINT('||replace((string_to_array(substring(t.geo,3,1000),';'))[1],',',' ')||')',3857),4326);
-
-
-
-
 --高德数据插入触发器  生成线路
 CREATE OR REPLACE FUNCTION BeforeInsertGaodeBusline() RETURNS TRIGGER AS $example_table$
 declare rec  record;
@@ -43,3 +38,30 @@ return new;
 end	;
 $example_table$ LANGUAGE plpgsql;
 CREATE TRIGGER BeforeInsertInsertGaodeBusLine_trigger Before INSERT  ON gaode_busline FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodeBusline ();
+
+
+--百度站点表触发器
+CREATE OR REPLACE FUNCTION BeforeInsertBaiduStation() RETURNS TRIGGER AS $example_table$
+BEGIN
+--自动进行坐标计算，并赋值
+NEW.geom=ST_PointFromText('POINT('||New.geo||')',4326);
+return new;
+End	;
+$example_table$ LANGUAGE plpgsql;
+CREATE TRIGGER BeforeInsertInsertBaiduStation_trigger Before INSERT  ON baidu_station FOR EACH ROW EXECUTE PROCEDURE BeforeInsertBaiduStation ();
+
+
+CREATE OR REPLACE FUNCTION BeforeInsertBaiduBusLine() RETURNS TRIGGER AS $example_table$
+BEGIN
+--自动进行坐标计算，并赋值
+NEW.geom=ST_LineFromText('LINESTRING('||New.geo||')',4326);
+return new;
+End	;
+$example_table$ LANGUAGE plpgsql;
+CREATE TRIGGER BeforeInsertInsertBaiduBusLine_trigger Before INSERT  ON baidu_busline_detail FOR EACH ROW EXECUTE PROCEDURE BeforeInsertBaiduBusLine ();
+
+
+
+select LayerTransform('gaode_station_copy','GCJ2BD');
+inputlayer：输入的表名称，是个要加/纠偏的table名称，table是个空间表。
+transformtype：加/纠偏方式，支持以下6种'BD2GCJ', 'GCJ2BD', 'WGS2GCJ','GCJ2WGS','BD2WGS','WGS2BD'，分别代表 百度转谷歌高德，谷歌高德转百度，84转火星，火星转84，百度转84,84转百度。

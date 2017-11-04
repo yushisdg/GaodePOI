@@ -11,18 +11,16 @@ Target Server Type    : PGSQL
 Target Server Version : 90411
 File Encoding         : 65001
 
-Date: 2017-11-04 16:56:17
+Date: 2017-11-04 16:56:33
 */
 
 
 -- ----------------------------
--- Table structure for baidu_line_station
+-- Table structure for baidu_nodate_busline
 -- ----------------------------
-DROP TABLE IF EXISTS "public"."baidu_line_station";
-CREATE TABLE "public"."baidu_line_station" (
-"line_uid" varchar(50) COLLATE "default" NOT NULL,
-"station_uid" varchar(50) COLLATE "default" NOT NULL,
-"station_num" int4 NOT NULL
+DROP TABLE IF EXISTS "public"."baidu_nodate_busline";
+CREATE TABLE "public"."baidu_nodate_busline" (
+"uid" varchar COLLATE "default" NOT NULL
 )
 WITH (OIDS=FALSE)
 
@@ -33,6 +31,6 @@ WITH (OIDS=FALSE)
 -- ----------------------------
 
 -- ----------------------------
--- Primary Key structure for table baidu_line_station
+-- Primary Key structure for table baidu_nodate_busline
 -- ----------------------------
-ALTER TABLE "public"."baidu_line_station" ADD PRIMARY KEY ("line_uid", "station_uid");
+ALTER TABLE "public"."baidu_nodate_busline" ADD PRIMARY KEY ("uid");
