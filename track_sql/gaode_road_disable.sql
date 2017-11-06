@@ -1,17 +1,17 @@
 /*
 Navicat PGSQL Data Transfer
 
-Source Server         : localhost
+Source Server         : postgresql-local
 Source Server Version : 90411
 Source Host           : localhost:5432
-Source Database       : superpower
+Source Database       : mydatabase
 Source Schema         : public
 
 Target Server Type    : PGSQL
 Target Server Version : 90411
 File Encoding         : 65001
 
-Date: 2017-11-06 19:28:06
+Date: 2017-11-07 06:51:51
 */
 
 
@@ -27,17 +27,13 @@ WITH (OIDS=FALSE)
 ;
 
 -- ----------------------------
+-- Records of gaode_road_disable
+-- ----------------------------
+INSERT INTO "public"."gaode_road_disable" VALUES ('B023B18HX1');
+INSERT INTO "public"."gaode_road_disable" VALUES ('B023B1CS8O');
+INSERT INTO "public"."gaode_road_disable" VALUES ('B0FFF5NZCK');
+INSERT INTO "public"."gaode_road_disable" VALUES ('B0FFGQ4SDY');
+
+-- ----------------------------
 -- Alter Sequences Owned By 
 -- ----------------------------
-
--- ----------------------------
--- Triggers structure for table gaode_road_disable
--- ----------------------------
-CREATE TRIGGER "beforeinsertinsertgaoderoad_trigger" BEFORE INSERT ON "public"."gaode_road_disable"
-FOR EACH ROW
-EXECUTE PROCEDURE "beforeinsertgaoderoad"();
-
--- ----------------------------
--- Primary Key structure for table gaode_road_disable
--- ----------------------------
-ALTER TABLE "public"."gaode_road_disable" ADD PRIMARY KEY ("road_id");
