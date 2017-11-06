@@ -65,3 +65,14 @@ CREATE TRIGGER BeforeInsertInsertBaiduBusLine_trigger Before INSERT  ON baidu_bu
 select LayerTransform('gaode_station_copy','GCJ2BD');
 inputlayer：输入的表名称，是个要加/纠偏的table名称，table是个空间表。
 transformtype：加/纠偏方式，支持以下6种'BD2GCJ', 'GCJ2BD', 'WGS2GCJ','GCJ2WGS','BD2WGS','WGS2BD'，分别代表 百度转谷歌高德，谷歌高德转百度，84转火星，火星转84，百度转84,84转百度。
+
+
+--高德道路插入触发器
+CREATE OR REPLACE FUNCTION BeforeInsertGaodeRoad() RETURNS TRIGGER AS $example_table$
+BEGIN
+--自动进行坐标计算，并赋值
+NEW.geom=ST_LineFromText('LINESTRING('||NEW.shape||')',4326);
+return new;
+End	;
+$example_table$ LANGUAGE plpgsql;
+CREATE TRIGGER BeforeInsertInsertGaodeRoad_trigger Before INSERT  ON gaode_road FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodeRoad ();

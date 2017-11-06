@@ -14,18 +14,8 @@ from urllib.request import urlopen
 def getOneBusLineDate(lineName):
     busLineUrl = "http://ditu.amap.com/service/poiInfo?query_type=TQUERY&pagesize=20&pagenum=1&qii=true&cluster_state=5&need_utd=true&utd_sceneid=1000&div=PC1000&addr_poi_merge=true&is_classify=true&zoom=10&city=330100&geoobj=119.384533|30.109422|121.362072|30.488845&keywords="+lineName;
     print(busLineUrl);
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'
-    };
-    proxiess = {
-        "http": "http://27.40.141.142:61234",
-        "http": "http://61.152.230.26:8080",
-        "http": "http://222.125.32.206:8080",
-        "http": "http://123.57.76.102:80",
-    }
-    res = requests.get(url=busLineUrl,headers = headers,timeout=3);
+    res = requests.get(url=busLineUrl,timeout=3);
     content=res.content;
-
     total_json = json.loads(content);
     print(total_json);
     status=total_json.get("status");
@@ -68,9 +58,9 @@ def getOneBusLineDate(lineName):
                     is_realtime = line.get("is_realtime");
                     stations = line.get("stations");
                     # print(bus_lineid+" ,"+areacode+" ,"+xs+" ,"+front_name+" ,"+terminal_name+" ,"+terminal_spell+" ,"+basic_price+" ,"+type+" ,"+company+" ,"+status+" ,"+ic_card+" ,"+description+" ,"+key_name+" ,"+start_time+" ,"+front_spell+" ,"+ys+" ,"+total_price+" ,"+name+" ,"+auto+" ,"+interval+" ,"+bounds+" ,"+air+" ,"+length+" ,"+end_time+" ,"+is_realtime);
-                    linesql = "INSERT INTO gaode_busline (bus_lineid, areacode, xs, front_name,terminal_name, terminal_spell, basic_price, type, company,status, ic_card, description, key_name, start_time, front_spell, ys, total_price, name, auto, interval, bounds, air, length, end_time, is_realtime) VALUES" + "('" + bus_lineid + " ','" + areacode + " ','" + xs + " ','" + front_name + " ','" + terminal_name + " ','" + terminal_spell + " ','" + basic_price + " ','" + type + " ','" + company + " ','" + status + " ','" + ic_card + " ','" + description + " ','" + key_name + " ','" + start_time + " ','" + front_spell + " ','" + ys + " ','" + total_price + " ','" + name + " ','" + auto + " ','" + interval + " ','" + bounds + " ','" + air + " ','" + length + " ','" + end_time + " ','" + is_realtime + "');";
+                    linesql = "INSERT INTO gaode_subway (bus_lineid, areacode, xs, front_name,terminal_name, terminal_spell, basic_price, type, company,status, ic_card, description, key_name, start_time, front_spell, ys, total_price, name, auto, interval, bounds, air, length, end_time, is_realtime) VALUES" + "('" + bus_lineid + " ','" + areacode + " ','" + xs + " ','" + front_name + " ','" + terminal_name + " ','" + terminal_spell + " ','" + basic_price + " ','" + type + " ','" + company + " ','" + status + " ','" + ic_card + " ','" + description + " ','" + key_name + " ','" + start_time + " ','" + front_spell + " ','" + ys + " ','" + total_price + " ','" + name + " ','" + auto + " ','" + interval + " ','" + bounds + " ','" + air + " ','" + length + " ','" + end_time + " ','" + is_realtime + "');";
 
-                    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                             port="5432");
                     cur = conn.cursor();
                     try:
@@ -96,7 +86,7 @@ def getOneBusLineDate(lineName):
                         # print(poiid2+" ,"+status+" ,"+trans_flag+" ,"+code+" ,"+name+" ,"+station_num+" ,"+poiid1+" ,"+start_time+" ,"+spell+" ,"+station_id+" ,"+end_time+" ,"+xy_coords);
                         station_sql = "INSERT INTO gaode_stations(poiid2,status,trans_flag,code,name,poiid1,start_time,spell,station_id,end_time,xy_coords) VALUES('" + poiid2 + "' ,'" + status + "' ,'" + trans_flag + "' ,'" + code + "' ,'" + name + "' ,'" + poiid1 + "' ,'" + start_time + "' ,'" + spell + "' ,'" + station_id + "' ,'" + end_time + "' ,'" + xy_coords + "');"
                         try:
-                            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                            conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                                     port="5432");
                             cur = conn.cursor();
                             cur.execute(station_sql);
@@ -107,7 +97,7 @@ def getOneBusLineDate(lineName):
                             conn.close();
                         line_station_rel_sql = "INSERT INTO gaode_line_station (busline_id, station_id, station_num) VALUES ('" + bus_lineid + "','" + station_id + "', " + station_num + ");"
                         try:
-                            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                            conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                                     port="5432");
                             cur = conn.cursor();
                             cur.execute(line_station_rel_sql);
@@ -120,9 +110,9 @@ def getOneBusLineDate(lineName):
                 conn.close();
 
 def getBuslineNanes():
-    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost", port="5432");
+    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost", port="5432");
     cur = conn.cursor();
-    sql = "SELECT array_to_string(ARRAY(SELECT DISTINCT UNNEST(string_to_array(array_to_string(array(SELECT t.address from gaode_poi t where t.typecode  like '15070%'),';'),';',''))),';');";
+    sql = "SELECT array_to_string(ARRAY(SELECT DISTINCT UNNEST(string_to_array(array_to_string(array(SELECT replace(t.address,'(在建)', '') from gaode_poi t where t.typecode like '15050%'),';'),';',''))),';');";
     cur.execute(sql);
     busLineStr=cur.fetchall();
     lines = busLineStr[0][0].split(';');
@@ -138,6 +128,7 @@ def getBuslineNanes():
         if line in lineList:
             continue
         else:
+            line="地铁"+line;
             lineList.append(line);
     return lineList;
 
@@ -155,10 +146,10 @@ def batchGetBusLineDate():
     lineList.reverse();
     for lineName in lineList:
         print(lineName);
-        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
-        sql = "select count(*) from gaode_busline t where t.key_name like '%"+lineName+"%'";
+        sql = "select count(*) from gaode_subway t where t.key_name like '%"+lineName+"%'";
         cur.execute(sql);
         keyData = cur.fetchall();
         count = keyData[0][0];
