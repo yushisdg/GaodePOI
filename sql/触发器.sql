@@ -76,3 +76,6 @@ return new;
 End	;
 $example_table$ LANGUAGE plpgsql;
 CREATE TRIGGER BeforeInsertInsertGaodeRoad_trigger Before INSERT  ON gaode_road FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodeRoad ();
+
+
+update gaode_residential_region t set geom=ST_PolygonFromText('POLYGON(('||replace(replace(t.shape,',', ' '),';',',')||'))',4326) ;
