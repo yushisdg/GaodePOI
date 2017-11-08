@@ -1,17 +1,17 @@
 /*
 Navicat PGSQL Data Transfer
 
-Source Server         : localhost
+Source Server         : postgresql-local
 Source Server Version : 90411
 Source Host           : localhost:5432
-Source Database       : superpower
+Source Database       : mydatabase
 Source Schema         : public
 
 Target Server Type    : PGSQL
 Target Server Version : 90411
 File Encoding         : 65001
 
-Date: 2017-11-08 16:52:03
+Date: 2017-11-09 06:57:45
 */
 
 
@@ -41,7 +41,37 @@ INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B05UWB', '没有�
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B05V44', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B05VIU', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B0644H', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06818', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06876', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B068HQ', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06A0B', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06BVS', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06DSN', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06F76', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06H8V', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06I40', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06JVA', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06K8X', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06L75', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06P85', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06PFB', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06PUR', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06V0E', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06WGU', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06WIS', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B06XBC', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B0728T', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B072XU', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07GYM', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07VN9', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07X8O', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07XFC', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07XL7', '返回错误状态');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07XXZ', '返回错误状态');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07Y3T', '返回错误状态');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07YKX', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07YXH', '没有空间数据');
+INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B07ZH9', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B0830J', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B08TBC', '没有空间数据');
 INSERT INTO "public"."gaode_residential_disable" VALUES ('B023B08YMY', '没有空间数据');
