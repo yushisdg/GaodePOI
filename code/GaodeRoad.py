@@ -14,53 +14,71 @@ from urllib.request import urlopen
 def getOneRoadDate(id):
     roadUrl ="http://ditu.amap.com/detail/get/detail?id="+id;
     print(roadUrl);
-    res = requests.get(url=roadUrl, timeout=3);
-    content = res.content;
-    print(content);
-    total_json = json.loads(content);
-    print(total_json);
-    status = total_json.get("status");
-    print(status);
-    if status == '1':
-        data = total_json.get("data");
-        base = data.get('base');
-        spec=data.get('spec');
-        name=base.get("name");
-        road_id=base.get("poiid");
-        city_code=base.get("city_adcode");
-        city_name=base.get("city_name");
-        print(city_name);
-        address=base.get("address");
-        mining_shape=spec.get("mining_shape");
-        if mining_shape != None:
-            shape=mining_shape.get("shape");
-            if shape!=None:
-                print(shape);
-                count=shape.count('|');
-                points="";
-                polyline="";
-                polyline = shape.split('|');
-                index=0;
-                for line in polyline:
-                    geo=line.replace(',',' ').replace(';',',');
-                    roadSql = "INSERT INTO gaode_road (road_id, city_code, shape, name, address, city_name,order_num) VALUES ('" + road_id + "', '" + city_code + "', '" + geo + "', '" + name + "', '" + address + "', '" + city_name + "',"+str(index)+");";
-                    index=index+1;
-                    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
-                                            port="5432");
-                    cur = conn.cursor();
+    try:
+        res = requests.get(url=roadUrl, timeout=5);
+        content = res.content;
+        print(content);
+        total_json = json.loads(content);
+        print(total_json);
+        status = total_json.get("status");
+        print(status);
+        if status == '1':
+            data = total_json.get("data");
+            base = data.get('base');
+            spec = data.get('spec');
+            name = base.get("name");
+            road_id = base.get("poiid");
+            city_code = base.get("city_adcode");
+            city_name = base.get("city_name");
+            print(city_name);
+            address = base.get("address");
+            mining_shape = spec.get("mining_shape");
+            if mining_shape != None:
+                shape = mining_shape.get("shape");
+                if shape != None:
+                    print(shape);
+                    count = shape.count('|');
+                    points = "";
+                    polyline = "";
+                    polyline = shape.split('|');
+                    index = 0;
+                    for line in polyline:
+                        geo = line.replace(',', ' ').replace(';', ',');
+                        roadSql = "INSERT INTO gaode_road (road_id, city_code, shape, name, address, city_name,order_num) VALUES ('" + road_id + "', '" + city_code + "', '" + geo + "', '" + name + "', '" + address + "', '" + city_name + "'," + str(
+                            index) + ");";
+                        index = index + 1;
+                        conn = psycopg2.connect(database="superpower", user="postgres", password="123456",
+                                                host="localhost",
+                                                port="5432");
+                        cur = conn.cursor();
+                        try:
+                            cur.execute(roadSql);
+                            conn.commit();
+                        except Exception as e:
+                            cur.close();
+                            conn.close();
+                            print(e);
+                else:
                     try:
-                        cur.execute(roadSql);
+                        reason = "无空间数据";
+                        conn = psycopg2.connect(database="superpower", user="postgres", password="123456",
+                                                host="localhost",
+                                                port="5432");
+                        cur = conn.cursor();
+                        sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
+                        cur.execute(sql);
                         conn.commit();
                     except Exception as e:
+                        print(e);
                         cur.close();
                         conn.close();
-                        print(e);
             else:
                 try:
-                    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                    reason = "无空间数据";
+                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                             port="5432");
                     cur = conn.cursor();
-                    sql = "INSERT INTO gaode_road_disable (road_id) VALUES ('" + id + "');"
+                    sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
                     cur.execute(sql);
                     conn.commit();
                 except Exception as e:
@@ -69,82 +87,29 @@ def getOneRoadDate(id):
                     conn.close();
         else:
             try:
-                conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                reason = "返回错误状态";
+                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                         port="5432");
                 cur = conn.cursor();
-                sql = "INSERT INTO gaode_road_disable (road_id) VALUES ('" + id + "');"
+                sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
                 cur.execute(sql);
                 conn.commit();
             except Exception as e:
                 print(e);
                 cur.close();
                 conn.close();
-                # if count==0:
-                #     polyline = shape.replace('|', ';').split(";");
-                # elif count==1:
-                #     polyline = shape.replace('|', ';').split(";");
-                # # elif count==2:
-                # #     print(2);
-                # #     polyline=shape.split('|');
-                # #     points=polyline[1]+";"+polyline[0]+";";
-                # #     pts=polyline[2].split(';');
-                # #     pts.reverse();
-                # #     index1=0;
-                # #     for pt in pts:
-                # #         points=points+pt;
-                # #         index1 = index1 + 1;
-                # #         if index1 <len(pts):
-                # #             points = points + ";"
-                # #     print(points);
-                # #     polyline=points.split(";");
-                # else:
-                #     polyline = shape.split('|');
-                #     segentCount = len(polyline);
-                #     print(segentCount);
-                #     for segIndex in range(0,segentCount-2):
-                #         print(segIndex);
-                #         points=points+polyline[segIndex]+";";
-                #     print("point: "+points);
-                #     pts = polyline[segentCount-1].split(';');
-                #     pts.reverse();
-                #     index1 = 0;
-                #     for pt in pts:
-                #         points = points + pt;
-                #         index1 = index1 + 1;
-                #         if index1 < len(pts):
-                #             points = points + ";"
-                #     print(points);
-                #     polyline = points.split(";");
-                # print(polyline);
-                # index = 0;
-                # geo="";
-                # for item in polyline:
-                #     item=item.replace(',',' ');
-                #     index = index + 1;
-                #     geo=geo+item;
-                #     if index != len(polyline):
-                #         geo = geo + ","
-                # print(geo);
+    except Exception as e:
+        print(e);
+        reason = "返回错误状态";
+        print(reason);
 
-    else:
-        try:
-            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
-                                    port="5432");
-            cur = conn.cursor();
-            sql = "INSERT INTO gaode_road_disable (road_id) VALUES ('" + id + "');"
-            cur.execute(sql);
-            conn.commit();
-        except Exception as e:
-            print(e);
-            cur.close();
-            conn.close();
 
 # getOneRoadDate();
 def batchGetBaiduBusLine():
     a = 1;
     while a == 1:
         sql = "SELECT id from gaode_road_poi t where t.id not in (select road_id from gaode_road ) and t.id not in (select road_id from gaode_road_disable ) limit 1;";
-        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
         cur.execute(sql);
@@ -152,7 +117,7 @@ def batchGetBaiduBusLine():
         uid = keyData[0][0];
         if uid!=None:
             getOneRoadDate(uid);
-            sleepTime=random.randint(50, 60);
+            sleepTime=random.randint(40, 50);
             print(sleepTime);
             time.sleep(sleepTime);
         else:

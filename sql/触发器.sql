@@ -79,3 +79,30 @@ CREATE TRIGGER BeforeInsertInsertGaodeRoad_trigger Before INSERT  ON gaode_road 
 
 
 update gaode_residential_region t set geom=ST_PolygonFromText('POLYGON(('||replace(replace(t.shape,',', ' '),';',',')||'))',4326) ;
+
+
+--高德Residential插入触发器
+CREATE OR REPLACE FUNCTION BeforeInsertGaodeResidential() RETURNS TRIGGER AS $example_table$
+BEGIN
+--自动进行坐标计算，并赋值
+NEW.geom=ST_PolygonFromText('POLYGON(('||replace(replace(New.shape,',', ' '),';',',')||'))',4326);
+return new;
+End	;
+$example_table$ LANGUAGE plpgsql;
+CREATE TRIGGER BeforeInsertInsertGaodeResidential_trigger Before INSERT  ON gaode_residential_region FOR EACH ROW EXECUTE PROCEDURE BeforeInsertGaodeResidential ();
+
+
+
+ --insert into gaode_poi_gaojia_inter select * from gaode_poi t where t.typecode like '%190308%' or  t.typecode like '%190309%'   --高架出入口
+ --insert into gaode_poi_subwaystation select * from gaode_poi t where t.typecode like '%15050%'   --地铁站
+ --insert into gaode_poi_building select * from gaode_poi t where t.typecode like '%12020%'   --写字楼
+--insert into gaode_poi_company select * from gaode_poi t where t.typecode like '%170%'   --公司
+--insert into gaode_poi_governmental select * from gaode_poi t where t.typecode like '%130%'   --政府部门
+--insert into gaode_poi_industrialpark select * from gaode_poi t where t.typecode like '%120100%'   --工业园区
+--insert into gaode_poi_inter select * from gaode_poi t where t.typecode like '%190302%'   --路口
+--insert into gaode_poi_museum select * from gaode_poi t where t.typecode like '%140%'   --博物馆
+--insert into gaode_poi_parking select * from gaode_poi t where t.typecode like '%15090%'   --博物馆
+--insert into gaode_poi_residentialarea select * from gaode_poi t where t.typecode like '%12030%'   --小区
+--insert into gaode_poi_school select * from gaode_poi t where t.typecode like '%14120%'   --学校
+--insert into gaode_poi_subwaystation select * from gaode_poi t where t.typecode like '%15050%'   --地铁
+--insert into gaode_poi_residentialarea select * from gaode_poi t where t.typecode like '%12030%'   --地铁

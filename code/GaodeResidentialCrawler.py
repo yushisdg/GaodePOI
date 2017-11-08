@@ -75,7 +75,7 @@ def getOneResidentialDate(id):
                     area_total = "";
                 sql = "INSERT INTO gaode_residential_region(region_id, city_code, shape, name, address, city_name, area, center, tag, service_parking, volume_rate, area_total, price, intro, opening_data, property_fee) VALUES ('" + region_id + "', '" + city_code + "', '" + shape + "', '" + name + "', '" + address + "', '" + city_name + "', " + area + ", '" + center + "', '" + tag + "', '" + service_parking + "', '" + volume_rate + "', '" + area_total + "', '" + price + "', '" + intro + "', '" + opening_data + "', '" + property_fee + "');"
                 print(sql);
-                conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                         port="5432");
                 cur = conn.cursor();
                 try:
@@ -89,7 +89,7 @@ def getOneResidentialDate(id):
 
                 reason="没有空间数据";
                 print(reason);
-                conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                         port="5432");
                 cur = conn.cursor();
                 sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
@@ -98,7 +98,7 @@ def getOneResidentialDate(id):
         else:
             reason = "返回错误状态";
             print(reason);
-            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+            conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                     port="5432");
             cur = conn.cursor();
             sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
@@ -107,7 +107,7 @@ def getOneResidentialDate(id):
     except Exception as e:
         print(e);
         reason="请求失败";
-        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
         sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
@@ -122,7 +122,7 @@ def batchGetResidential():
     a = 1;
     while a == 1:
         sql = "SELECT id from gaode_poi_residentialarea t where t.id not in (select region_id from gaode_residential_region ) and t.id not in (select region_id from gaode_residential_disable ) limit 1;";
-        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
+        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
         cur.execute(sql);
@@ -130,7 +130,7 @@ def batchGetResidential():
         uid = keyData[0][0];
         if uid!=None:
             getOneResidentialDate(uid);
-            sleepTime=random.randint(65, 75);
+            sleepTime=random.randint(75, 85);
             print(sleepTime);
             time.sleep(sleepTime);
         else:
