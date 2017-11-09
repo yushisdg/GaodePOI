@@ -1,42 +1,37 @@
+# -*-*-
+# 感谢骚男 『zh (QQ: 315393472)』 提供的源代码
+# -*-*-
+
+# ! -*- encoding:utf-8 -*-
+
 import requests
-import bs4
-import random
 
-url = "http://www.ip181.com/"
-proxiess = {
-  "http": "http://27.40.141.142:61234",
-  "http": "http://61.152.230.26:8080",
-  "http": "http://222.125.32.206:8080",
-  "http": "http://123.57.76.102:80",
+# 要访问的目标页面
+targetUrl = "http://ditu.amap.com/detail/get/detail?id=B023B02GYJ"
+# targetUrl = "http://proxy.abuyun.com/switch-ip"
+# targetUrl = "http://proxy.abuyun.com/current-ip"
+
+# 代理服务器
+proxyHost = "http-dyn.abuyun.com"
+proxyPort = "9020"
+
+# 代理隧道验证信息
+proxyUser = "HN5861W41O905A0D"
+proxyPass = "044A1683F60BB0C2"
+
+proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
+    "host": proxyHost,
+    "port": proxyPort,
+    "user": proxyUser,
+    "pass": proxyPass,
 }
-response = requests.get(url);
-soup=bs4.BeautifulSoup(response.text);
-table=soup.select('tr');
+
 proxies = {
+    "http": proxyMeta,
+    "https": proxyMeta,
 }
-ipList=[];
-for tr in table:
-    ip="http://"+tr.get_text().split()[0]+":"+tr.get_text().split()[1];
-    ipList.append(ip);
 
-length=len(ipList);
-ableList=[];
-for proxy in ipList:
-    proxies={'http':'http://'+proxy};
-    print(proxies);
-    try:
-        r=requests.get(url,proxies=proxiess,timeout=3);
-        print(r);
-        if r.status_code == 200 :
-            print(proxy);
-            ableList.append(proxy);
-    except:
-        print("此代理无效");
-print(ableList);
+resp = requests.get(targetUrl, proxies=proxies)
 
-
-
-
-
-
-
+print(resp.status_code)
+print(resp.text)
