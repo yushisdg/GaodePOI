@@ -17,12 +17,6 @@ def getOneBusLineDate(lineName):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'
     };
-    proxiess = {
-        "http": "http://27.40.141.142:61234",
-        "http": "http://61.152.230.26:8080",
-        "http": "http://222.125.32.206:8080",
-        "http": "http://123.57.76.102:80",
-    }
     res = requests.get(url=busLineUrl,headers = headers,timeout=3);
     content=res.content;
 
