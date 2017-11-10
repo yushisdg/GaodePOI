@@ -15,28 +15,7 @@ def getOneRoadDate(id):
     roadUrl ="http://ditu.amap.com/detail/get/detail?id="+id;
     print(roadUrl);
     try:
-        # 使用收费代理
-        proxyHost = "http-dyn.abuyun.com"
-        proxyPort = "9020"
-
-        # 代理隧道验证信息
-        proxyUser = "HN5861W41O905A0D"
-        proxyPass = "044A1683F60BB0C2"
-
-        proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
-            "host": proxyHost,
-            "port": proxyPort,
-            "user": proxyUser,
-            "pass": proxyPass,
-        }
-
-        proxies = {
-            "http": proxyMeta,
-            "https": proxyMeta,
-        }
-
-        res = requests.get(roadUrl, proxies=proxies)
-        # res = requests.get(url=roadUrl, timeout=5);
+        res = requests.get(url=roadUrl, timeout=5);
         content = res.content;
         print(content);
         total_json = json.loads(content);
@@ -108,15 +87,13 @@ def getOneRoadDate(id):
                     conn.close();
         else:
             try:
-                print(status);
-                if status != 6:
-                    reason = "返回错误状态";
-                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
-                                            port="5432");
-                    cur = conn.cursor();
-                    sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
-                    cur.execute(sql);
-                    conn.commit();
+                reason = "返回错误状态";
+                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                                        port="5432");
+                cur = conn.cursor();
+                sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
+                cur.execute(sql);
+                conn.commit();
             except Exception as e:
                 print(e);
                 cur.close();
@@ -140,9 +117,9 @@ def batchGetBaiduBusLine():
         uid = keyData[0][0];
         if uid!=None:
             getOneRoadDate(uid);
-            sleepTime=random.randint(5, 6);
+            sleepTime=random.randint(40, 50);
             print(sleepTime);
-            time.sleep(sleepTime);7
+            time.sleep(sleepTime);
         else:
             break;
 
