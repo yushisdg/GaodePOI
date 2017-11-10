@@ -131,7 +131,7 @@ def batchGetResidential():
         uid = keyData[0][0];
         if uid!=None:
             getOneResidentialDate(uid);
-            sleepTime=random.randint(10, 12);
+            sleepTime=random.randint(15, 20);
             print(sleepTime);
             time.sleep(sleepTime);
         else:
