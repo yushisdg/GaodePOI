@@ -32,7 +32,7 @@ def getGaodePOI(key,rectangle,type,page,offset):
                     tag = json.dumps(poi.get('tag'));
                     name = poi.get('name');
                     type = poi.get('type');
-                    typecode = json.dumps(poi.get('typecode'));
+                    typecode = poi.get('typecode');
                     biz_type = json.dumps(poi.get('biz_type'));
                     address = poi.get('address');
                     if isinstance(address, str):
@@ -47,10 +47,10 @@ def getGaodePOI(key,rectangle,type,page,offset):
                     email = json.dumps(poi.get('email'));
                     pcode = json.dumps(poi.get('pcode'));
                     pname = json.dumps(poi.get('pname'));
-                    citycode = json.dumps(poi.get('citycode'));
-                    cityname = json.dumps(poi.get('cityname'));
-                    adcode = json.dumps(poi.get('adcode'));
-                    adname = json.dumps(poi.get('adname'));
+                    citycode = poi.get('citycode');
+                    cityname = poi.get('cityname');
+                    adcode = poi.get('adcode');
+                    adname = poi.get('adname');
                     entr_location = json.dumps(poi.get('entr_location'));
                     exit_location = json.dumps(poi.get('exit_location'));
                     navi_poiid = json.dumps(poi.get('navi_poiid'));
@@ -121,7 +121,7 @@ def getOneRectangleAllPoi(key,rectangle,type,page,offset):
 def getRegionRectangles():
     conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost", port="5432");
     cur = conn.cursor();
-    cur.execute("select t.__xmin||','||t.ymin||';'||t.__xmax||','||t.ymax rectangle from hangzhou_grid t");
+    cur.execute("select t.__xmin||','||t.ymin||';'||t.__xmax||','||t.ymax rectangle from chengdu_grid t");
     rectangleData = cur.fetchall();
     cur.close();
     conn.close();
@@ -184,5 +184,5 @@ def afterRequest(key):
 #     for num in range(2, pages+1):
 #         getGaodePOI(key, rectangle, type, str(num), offset)
 
-type='190308';
+type='190302';
 batchGetGaodePoi(type);

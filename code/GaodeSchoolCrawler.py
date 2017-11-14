@@ -15,27 +15,6 @@ def getOneResidentialDate(id):
     roadUrl ="http://ditu.amap.com/detail/get/detail?id="+id;
     print(roadUrl);
     try:
-        # # 使用收费代理
-        # proxyHost = "http-dyn.abuyun.com"
-        # proxyPort = "9020"
-        #
-        # # 代理隧道验证信息
-        # proxyUser = "HN5861W41O905A0D"
-        # proxyPass = "044A1683F60BB0C2"
-        #
-        # proxyMeta = "http://%(user)s:%(pass)s@%(host)s:%(port)s" % {
-        #     "host": proxyHost,
-        #     "port": proxyPort,
-        #     "user": proxyUser,
-        #     "pass": proxyPass,
-        # }
-        #
-        # proxies = {
-        #     "http": proxyMeta,
-        #     "https": proxyMeta,
-        # }
-        #
-        # res = requests.get(roadUrl, proxies=proxies)
         res = requests.get(url=roadUrl, timeout=3);
         content = res.content;
         print(content);
@@ -94,7 +73,7 @@ def getOneResidentialDate(id):
                     property_fee = "";
                 if area_total == None:
                     area_total = "";
-                sql = "INSERT INTO gaode_residential_region(region_id, city_code, shape, name, address, city_name, area, center, tag, service_parking, volume_rate, area_total, price, intro, opening_data, property_fee) VALUES ('" + region_id + "', '" + city_code + "', '" + shape + "', '" + name + "', '" + address + "', '" + city_name + "', " + area + ", '" + center + "', '" + tag + "', '" + service_parking + "', '" + volume_rate + "', '" + area_total + "', '" + price + "', '" + intro + "', '" + opening_data + "', '" + property_fee + "');"
+                sql = "INSERT INTO gaode_region_school(region_id, city_code, shape, name, address, city_name, area, center, tag, service_parking, volume_rate, area_total, price, intro, opening_data, property_fee) VALUES ('" + region_id + "', '" + city_code + "', '" + shape + "', '" + name + "', '" + address + "', '" + city_name + "', " + area + ", '" + center + "', '" + tag + "', '" + service_parking + "', '" + volume_rate + "', '" + area_total + "', '" + price + "', '" + intro + "', '" + opening_data + "', '" + property_fee + "');"
                 print(sql);
                 conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                         port="5432");
@@ -113,27 +92,26 @@ def getOneResidentialDate(id):
                 conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                         port="5432");
                 cur = conn.cursor();
-                sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
+                sql = "INSERT INTO gaode_region_school_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
                 cur.execute(sql);
                 conn.commit();
         else:
-            if status=="8":
-                reason = "未找到";
+            if status == "8":
+                reason = "返回错误状态";
                 print(reason);
                 conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                         port="5432");
                 cur = conn.cursor();
-                sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
+                sql = "INSERT INTO gaode_region_school_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
                 cur.execute(sql);
                 conn.commit();
-
     except Exception as e:
         print(e);
         reason="请求失败";
         conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
-        sql = "INSERT INTO gaode_residential_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
+        sql = "INSERT INTO gaode_region_school_disable (region_id,reason) VALUES ('" + id + "','" + reason + "');"
         cur.execute(sql);
         conn.commit();
 
@@ -144,7 +122,7 @@ def getOneResidentialDate(id):
 def batchGetResidential():
     a = 1;
     while a == 1:
-        sql = "SELECT id from gaode_poi_residentialarea t where t.id not in (select region_id from gaode_residential_region ) and t.id not in (select region_id from gaode_residential_disable ) limit 1;";
+        sql = "SELECT id from gaode_poi_school t where t.id not in (select region_id from gaode_region_school ) and t.id not in (select region_id from gaode_region_school_disable )  limit 1;";
         conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
@@ -153,10 +131,7 @@ def batchGetResidential():
         uid = keyData[0][0];
         if uid!=None:
             getOneResidentialDate(uid);
-
-
-            sleepTime=random.randint(10, 25);
-
+            sleepTime=random.randint(15, 25);
             print(sleepTime);
             time.sleep(sleepTime);
         else:
