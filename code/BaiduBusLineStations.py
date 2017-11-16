@@ -71,7 +71,7 @@ def getBauduPoint(t):
     return point;
 
 def getBaidubusLine(uid):
-    busLineUrl = "http://map.baidu.com/?qt=bsl&tps=&newmap=1&uid="+uid+"&c=179";
+    busLineUrl = "http://map.baidu.com/?qt=bsl&tps=&newmap=1&uid="+uid+"&c=194";
     print(busLineUrl);
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'
@@ -118,9 +118,9 @@ def getBaidubusLine(uid):
             startTime=item.get("startTime");
 
             stations=item.get("stations");
-            line_sql="INSERT INTO baidu_busline_detail (uid, name, geo, end_time, start_time, line_direction, company, pair_lineuid) VALUES ('"+uid+"', '"+name+"', '"+geo+"', '"+endTime+"','"+startTime+"','"+line_direction+"','"+company+"','"+pairlineUid+"');"
+            line_sql="INSERT INTO baidu_busline_detail_xiamen (uid, name, geo, end_time, start_time, line_direction, company, pair_lineuid) VALUES ('"+uid+"', '"+name+"', '"+geo+"', '"+endTime+"','"+startTime+"','"+line_direction+"','"+company+"','"+pairlineUid+"');"
             print(line_sql);
-            conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                     port="5432");
             cur = conn.cursor();
             try:
@@ -146,10 +146,10 @@ def getBaidubusLine(uid):
                     # print(stationGeo);
                     stationName=station.get("name");
                     print(order);
-                    stationSql="INSERT INTO baidu_station (uid, name, geo) VALUES ('"+stationUid+"','"+stationName+"','"+stationGeo+"');"
+                    stationSql="INSERT INTO baidu_station_xiamen (uid, name, geo) VALUES ('"+stationUid+"','"+stationName+"','"+stationGeo+"');"
                     print(stationSql);
                     try:
-                        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                                 port="5432");
                         cur = conn.cursor();
                         cur.execute(stationSql);
@@ -160,10 +160,10 @@ def getBaidubusLine(uid):
                         conn.close();
                     station_num=order;
                     station_num = str(order);
-                    line_station_rel_sql = "INSERT INTO baidu_line_station (line_uid, station_uid, station_num) VALUES ('" + uid + "','" + stationUid + "', " + station_num + ");"
+                    line_station_rel_sql = "INSERT INTO baidu_line_station_xiamen (line_uid, station_uid, station_num) VALUES ('" + uid + "','" + stationUid + "', " + station_num + ");"
                     print(line_station_rel_sql);
                     try:
-                        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                                 port="5432");
                         cur = conn.cursor();
                         cur.execute(line_station_rel_sql);
@@ -174,10 +174,10 @@ def getBaidubusLine(uid):
                         conn.close();
     else:
         try:
-            conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+            conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                     port="5432");
             cur = conn.cursor();
-            sql="INSERT INTO baidu_nodate_busline (uid) VALUES ('"+uid+"');"
+            sql="INSERT INTO baidu_nodate_busline_xiamen (uid) VALUES ('"+uid+"');"
             cur.execute(sql);
             conn.commit();
         except Exception as e:
@@ -190,15 +190,15 @@ def getBaidubusLine(uid):
 def batchGetBaiduBusLine():
     a = 1;
     while a == 1:
-        sql = "select uid from baidu_busline where uid not in (select uid from baidu_busline_detail) and uid not in (select uid from baidu_nodate_busline) limit 1;";
-        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+        sql = "select uid from baidu_busline_xiamen where uid not in (select uid from baidu_busline_detail_xiamen) and uid not in (select uid from baidu_nodate_busline_xiamen) limit 1;";
+        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
         cur.execute(sql);
         keyData = cur.fetchall();
         uid = keyData[0][0];
         getBaidubusLine(uid);
-        sleepTime=random.randint(20, 30);
+        sleepTime=random.randint(30, 35);
         print(sleepTime);
         time.sleep(sleepTime);
 

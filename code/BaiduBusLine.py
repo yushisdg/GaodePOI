@@ -10,7 +10,8 @@ import random
 
 
 def getBuiduLine(lineName):
-    busLineUrl = "http://map.baidu.com/?qt=s&wd="+lineName+"&c=179";
+    # hangzhou 179  xiamen194
+    busLineUrl = "http://map.baidu.com/?qt=s&wd="+lineName+"&c=194";
     res = requests.get(url=busLineUrl).content;
     print(busLineUrl);
     total_json = json.loads(res);
@@ -24,10 +25,10 @@ def getBuiduLine(lineName):
                 uid = item.get("uid");
                 addr = lineName;
                 if uid != None and addr != None:
-                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                             port="5432");
                     cur = conn.cursor();
-                    sql = "INSERT INTO baidu_busline(uid, addr) VALUES ('" + uid + "', '" + addr + "');"
+                    sql = "INSERT INTO baidu_busline_xiamen(uid, addr) VALUES ('" + uid + "', '" + addr + "');"
                     try:
                         cur.execute(sql);
                         conn.commit();
@@ -47,19 +48,19 @@ def getBuiduLine(lineName):
                             addr = line.get("addr");
                             print(uid + "  " + addr);
                             if uid!=None and  addr!=None:
-                                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                                conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                                         port="5432");
                                 cur = conn.cursor();
-                                sql = "INSERT INTO baidu_busline(uid, addr) VALUES ('" + uid + "', '" + addr + "');"
+                                sql = "INSERT INTO baidu_busline_xiamen(uid, addr) VALUES ('" + uid + "', '" + addr + "');"
                                 try:
                                     cur.execute(sql);
                                     conn.commit();
                                     cur.close();
                                     conn.close();
-                                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456",
+                                    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456",
                                                             host="localhost", port="5432");
                                     cur = conn.cursor();
-                                    sql = "INSERT INTO baidu_busline_disable(name) VALUES ('" + lineName + "');"
+                                    sql = "INSERT INTO baidu_busline_disable_xiamen(name) VALUES ('" + lineName + "');"
                                     cur.execute(sql);
                                     conn.commit();
                                     cur.close();
@@ -70,9 +71,9 @@ def getBuiduLine(lineName):
                                     conn.close();
     else:
         print("--------------------");
-        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",port="5432");
+        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",port="5432");
         cur = conn.cursor();
-        sql="INSERT INTO baidu_busline_disable(name) VALUES ('"+lineName+"');"
+        sql="INSERT INTO baidu_busline_disable_xiamen(name) VALUES ('"+lineName+"');"
         cur.execute(sql);
         conn.commit();
         cur.close();
@@ -83,28 +84,28 @@ def getBuiduLine(lineName):
 def batchGetBaiduBusLine():
     lineList=getBuslineNanes();
     for lineName in lineList:
-        conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+        conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost",
                                 port="5432");
         cur = conn.cursor();
-        cur.execute("select count(*) from baidu_busline t where t.addr='"+lineName+"'");
+        cur.execute("select count(*) from baidu_busline_xiamen t where t.addr='"+lineName+"'");
         keyData = cur.fetchall();
         if keyData[0][0] == 0:
-            cur.execute("SELECT count(*) from baidu_busline_disable t where  t.name='" + lineName + "'");
+            cur.execute("SELECT count(*) from baidu_busline_disable_xiamen t where  t.name='" + lineName + "'");
             keyData1 = cur.fetchall();
             cur.close();
             conn.close();
             if keyData1[0][0] == 0:
                 getBuiduLine(lineName);
-                sleepTime = random.randint(30, 50);
+                sleepTime = random.randint(20, 30);
                 print(sleepTime);
                 time.sleep(sleepTime);
 
 
 
 def getBuslineNanes():
-    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost", port="5432");
+    conn = psycopg2.connect(database="mydatabase", user="postgres", password="123456", host="localhost", port="5432");
     cur = conn.cursor();
-    sql = "SELECT array_to_string(ARRAY(SELECT DISTINCT UNNEST(array(SELECT t.address from gaode_poi t)) ORDER BY 1),';');";
+    sql = "SELECT array_to_string(ARRAY(SELECT DISTINCT UNNEST(array(SELECT t.address from gaode_poi_xiamen t)) ORDER BY 1),';');";
     cur.execute(sql);
     busLineStr=cur.fetchall();
     cur.close();
