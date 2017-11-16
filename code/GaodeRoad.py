@@ -86,18 +86,19 @@ def getOneRoadDate(id):
                     cur.close();
                     conn.close();
         else:
-            try:
-                reason = "返回错误状态";
-                conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
-                                        port="5432");
-                cur = conn.cursor();
-                sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
-                cur.execute(sql);
-                conn.commit();
-            except Exception as e:
-                print(e);
-                cur.close();
-                conn.close();
+            if status=="8":
+                try:
+                    reason = "返回错误状态";
+                    conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
+                                            port="5432");
+                    cur = conn.cursor();
+                    sql = "INSERT INTO gaode_road_disable (road_id,reason) VALUES ('" + id + "','" + reason + "');"
+                    cur.execute(sql);
+                    conn.commit();
+                except Exception as e:
+                    print(e);
+                    cur.close();
+                    conn.close();
     except Exception as e:
         print(e);
         reason = "返回错误状态";

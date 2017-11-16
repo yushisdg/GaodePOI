@@ -84,7 +84,7 @@ def getGaodePOI(key,rectangle,type,page,offset):
                     hotel_ordering = biz_ext.get('hotel_ordering');  # None
                     hotel_ordering = "hotel_ordering";
                     photos = json.dumps(poi.get('photos'));
-                    sql = "INSERT INTO gaode_poi (id, tag, name, type, typecode, biz_type, address, location, distance, tel, postcode, website, email, pcode, pname, citycode, cityname, adcode, adname, entr_location, exit_location, navi_poiid, gridcode, alias, business_area, parking_type, indoor_map, cpid, floor, truefloor, groupbuy_num, discount_num, rating, cost, meal_ordering, seat_ordering, ticket_ordering, hotel_ordering, photos) VALUES ('" + id + "','" + tag + "','" + name + "','" + type + "','" + typecode + "','" + biz_type + "','" + address + "','" + location + "','" + distance + "','" + tel + "','" + postcode + "','" + website + "','" + email + "','" + pcode + "','" + pname + "','" + citycode + "','" + cityname + "','" + adcode + "','" + adname + "','" + entr_location + "','" + exit_location + "','" + navi_poiid + "','" + gridcode + "','" + alias + "','" + business_area + "','" + parking_type + "','" + indoor_map + "','" + cpid + "','" + floor + "','" + truefloor + "','" + groupbuy_num + "','" + discount_num + "','" + rating + "','" + cost + "','" + meal_ordering + "','" + seat_ordering + "','" + ticket_ordering + "','" + hotel_ordering + "','" + photos + "');";
+                    sql = "INSERT INTO gaode_poi_chengdu (id, tag, name, type, typecode, biz_type, address, location, distance, tel, postcode, website, email, pcode, pname, citycode, cityname, adcode, adname, entr_location, exit_location, navi_poiid, gridcode, alias, business_area, parking_type, indoor_map, cpid, floor, truefloor, groupbuy_num, discount_num, rating, cost, meal_ordering, seat_ordering, ticket_ordering, hotel_ordering, photos) VALUES ('" + id + "','" + tag + "','" + name + "','" + type + "','" + typecode + "','" + biz_type + "','" + address + "','" + location + "','" + distance + "','" + tel + "','" + postcode + "','" + website + "','" + email + "','" + pcode + "','" + pname + "','" + citycode + "','" + cityname + "','" + adcode + "','" + adname + "','" + entr_location + "','" + exit_location + "','" + navi_poiid + "','" + gridcode + "','" + alias + "','" + business_area + "','" + parking_type + "','" + indoor_map + "','" + cpid + "','" + floor + "','" + truefloor + "','" + groupbuy_num + "','" + discount_num + "','" + rating + "','" + cost + "','" + meal_ordering + "','" + seat_ordering + "','" + ticket_ordering + "','" + hotel_ordering + "','" + photos + "');";
                     print(sql);
                     conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost",
                                             port="5432");
@@ -121,7 +121,7 @@ def getOneRectangleAllPoi(key,rectangle,type,page,offset):
 def getRegionRectangles():
     conn = psycopg2.connect(database="superpower", user="postgres", password="123456", host="localhost", port="5432");
     cur = conn.cursor();
-    cur.execute("select t.__xmin||','||t.ymin||';'||t.__xmax||','||t.ymax rectangle from chengdu_grid t");
+    cur.execute("select t.__xmin||','||t.ymin||';'||t.__xmax||','||t.ymax rectangle from chengdu_grid t where t.region_code='610000'");
     rectangleData = cur.fetchall();
     cur.close();
     conn.close();
@@ -184,5 +184,5 @@ def afterRequest(key):
 #     for num in range(2, pages+1):
 #         getGaodePOI(key, rectangle, type, str(num), offset)
 
-type='190302';
+type='150700';
 batchGetGaodePoi(type);
